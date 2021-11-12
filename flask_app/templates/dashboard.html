@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <div class="container bg-secondary rounded">
+        <nav class="d-flex justify-content-between align-items-center mt-4 mb-4">
+            <h1 class="text-center">Welcome {{user.full_name()}}!</h1>
+            <a href="/logout" class="btn btn-warning">Log Out</a>
+        </nav>
+        <nav class="d-flex justify-content-between align-items-center mt-4">
+            <form action="/thoughts/create" method="post" class="col-9">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    {% for message in messages %}
+                    <p>{{message}}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div class="form-group d-flex align-items-center mb-4">
+                    <input type="text" name="body" class="form-control" placeholder="Post a thought here">
+                    <button class="btn btn-warning">Post!</button>
+                </div>
+            </form>
+        </nav>
+    </div>
+    <div class="container mt-4">
+        <table class="table col-md-9">
+            <tbody>
+                {% for thought in thoughts %}
+                <tr>
+                    <td class="align-top"><a href="/users/{{thought.creator.id}}">{{thought.creator.first_name}} says:</a></td>
+                    <td class="align-top">{{thought.body}}</td>
+                    <td class="align-top"><a href="/thoughts/{{thought.id}}/delete">Delete</a></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><a href="/thoughts/{{thought.id}}/like"><button class="btn btn-primary btn-sm">Like</button></a> | <a href="/thoughts/{{thought.id}}/unlike"><button class="btn btn-primary btn-sm">Un-Like</button></a> | Likes: {{session['count']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
